@@ -12,12 +12,21 @@ type Post models.Post
 
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	rows, err := initializers.DB.Queryx(
-		`SELECT p.id, title, body, image_url, c.name, username
+		`SELECT p.id, title, body, image_url, c.name, username, date,
+     (SELECT COUNT(*)
+      FROM likes
+      WHERE post_id = p.id
+     ) AS like_count,
+     (SELECT COUNT(*)
+      FROM comments
+      WHERE post_id = p.id
+     ) AS comment_count
      FROM posts AS p
      JOIN users AS u
      ON p.user_id = u.id
      JOIN categories AS c
-     ON p.category_id = c.id`)
+     ON p.category_id = c.id
+     `)
 
 	if err != nil {
 		log.Fatalf("Error querying data: %s", err)
@@ -33,6 +42,9 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 			&post.ImageUrl,
 			&post.Category,
 			&post.Username,
+			&post.Date,
+			&post.LikeCount,
+			&post.CommentCount,
 		)
 
 		if err != nil {

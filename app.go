@@ -32,6 +32,7 @@ func main() {
 }
 
 func routers() *chi.Mux {
+
 	router.Get("/posts", controllers.GetAllPosts)
 	return router
 }
