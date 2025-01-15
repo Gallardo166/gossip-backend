@@ -11,6 +11,7 @@ import (
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("query")
 	category := r.URL.Query().Get("category")
+	sort := r.URL.Query().Get("sort")
 	var finalQuery string
 	switch true {
 	case query != "" && category != "":
@@ -21,6 +22,11 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		finalQuery = fmt.Sprintf(CategoryQuery, category)
 	default:
 		finalQuery = GetAllPostsQuery
+	}
+	if sort == "time" {
+		finalQuery += " ORDER BY date DESC"
+	} else {
+		finalQuery += " ORDER BY like_count DESC"
 	}
 	rows, err := initializers.DB.Queryx(finalQuery)
 
