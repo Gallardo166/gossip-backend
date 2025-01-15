@@ -32,8 +32,10 @@ func main() {
 }
 
 func routers() *chi.Mux {
-
+	//GET posts
 	router.Get("/posts", controllers.GetAllPosts)
-	router.Get("/posts/{title}", controllers.GetPostsByTitle)
+
+	//GET categories
+	router.Get("/categories", controllers.GetAllCategories)
 	return router
 }

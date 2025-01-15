@@ -2,11 +2,10 @@ package helper
 
 import (
 	"encoding/json"
-	"gossip-backend/models"
 	"net/http"
 )
 
-func WriteJson(w http.ResponseWriter, data []*models.Post) {
+func WriteJson[T comparable](w http.ResponseWriter, data []*T) {
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		WriteError(w, err)

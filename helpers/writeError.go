@@ -1,10 +1,10 @@
 package helper
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
 func WriteError(w http.ResponseWriter, err error) {
-	fmt.Println(err)
+	log.Fatalf("Error: %s", err)
 }
