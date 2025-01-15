@@ -1,40 +1,26 @@
 package controllers
 
 import (
-	"encoding/json"
+	"fmt"
+	helper "gossip-backend/helpers"
 	"gossip-backend/initializers"
 	"gossip-backend/models"
-	"log"
 	"net/http"
+	"strings"
+
+	"github.com/go-chi/chi/v5"
 )
 
-type Post models.Post
-
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
-	rows, err := initializers.DB.Queryx(
-		`SELECT p.id, title, body, image_url, c.name, username, date,
-     (SELECT COUNT(*)
-      FROM likes
-      WHERE post_id = p.id
-     ) AS like_count,
-     (SELECT COUNT(*)
-      FROM comments
-      WHERE post_id = p.id
-     ) AS comment_count
-     FROM posts AS p
-     JOIN users AS u
-     ON p.user_id = u.id
-     JOIN categories AS c
-     ON p.category_id = c.id
-     `)
+	rows, err := initializers.DB.Queryx(GetAllPostsQuery)
 
 	if err != nil {
-		log.Fatalf("Error querying data: %s", err)
+		helper.WriteError(w, err)
 	}
 
-	var posts []*Post
+	var posts []*models.Post
 	for rows.Next() {
-		var post Post
+		var post models.Post
 		err := rows.Scan(
 			&post.Id,
 			&post.Title,
@@ -48,22 +34,45 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			log.Fatalf("Error scanning data: %s", err)
+			helper.WriteError(w, err)
 		}
 
 		posts = append(posts, &post)
 	}
 
-	jsonPosts, err := json.Marshal(posts)
+	helper.WriteJson(w, posts)
+}
+
+func GetPostsByTitle(w http.ResponseWriter, r *http.Request) {
+	titleParam := chi.URLParam(r, "title")
+	fmt.Println(strings.Replace(GetPostsByTitleQuery, "title_query", titleParam, 1))
+	rows, err := initializers.DB.Queryx(strings.Replace(GetPostsByTitleQuery, "title_query", titleParam, 1))
 
 	if err != nil {
-		log.Fatalf("Error converting to JSON: %s", err)
+		helper.WriteError(w, err)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(jsonPosts)
 
-	if err != nil {
-		log.Fatalf("Error sending JSON: %s", err)
+	var posts []*models.Post
+	for rows.Next() {
+		var post models.Post
+		err := rows.Scan(
+			&post.Id,
+			&post.Title,
+			&post.Body,
+			&post.ImageUrl,
+			&post.Category,
+			&post.Username,
+			&post.Date,
+			&post.LikeCount,
+			&post.CommentCount,
+		)
+
+		if err != nil {
+			helper.WriteError(w, err)
+		}
+
+		posts = append(posts, &post)
 	}
+
+	helper.WriteJson(w, posts)
 }
