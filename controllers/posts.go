@@ -6,6 +6,9 @@ import (
 	"gossip-backend/initializers"
 	"gossip-backend/models"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/lib/pq"
 )
 
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
@@ -34,9 +37,9 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		helper.WriteError(w, err)
 	}
 
-	var posts []*models.Post
+	var posts []*models.PostPreview
 	for rows.Next() {
-		var post models.Post
+		var post models.PostPreview
 		err := rows.Scan(
 			&post.Id,
 			&post.Title,
@@ -57,4 +60,26 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.WriteJson(w, posts)
+}
+
+func GetPost(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	row := initializers.DB.QueryRowx(fmt.Sprintf(GetPostQuery, id))
+	var post models.Post
+	err := row.Scan(
+		&post.Title,
+		&post.Body,
+		&post.ImageUrl,
+		&post.Category,
+		&post.Username,
+		&post.Date,
+		&post.LikeCount,
+		pq.Array(&post.Comments),
+	)
+
+	if err != nil {
+		helper.WriteError(w, err)
+	}
+
+	helper.WriteJson(w, post)
 }
