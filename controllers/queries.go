@@ -42,6 +42,9 @@ var GetPostQuery = `
 				(SELECT COUNT(*)
 					FROM   post_likes
 					WHERE  post_id = p.id) AS like_count,
+				(SELECT COUNT(*)
+				  FROM 	 comments
+					WHERE  post_id = p.id) AS comment_count,
 				(SELECT ARRAY_AGG(
 									JSON_BUILD_OBJECT('id', com.id,
 																		'username',	(SELECT username

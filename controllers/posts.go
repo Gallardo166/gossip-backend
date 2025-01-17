@@ -74,6 +74,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 		&post.Username,
 		&post.Date,
 		&post.LikeCount,
+		&post.CommentCount,
 		pq.Array(&post.Comments),
 	)
 

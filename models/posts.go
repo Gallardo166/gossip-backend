@@ -13,12 +13,13 @@ type PostPreview struct {
 }
 
 type Post struct {
-	Title     string   `json:"title"`
-	Body      string   `json:"body"`
-	ImageUrl  *string  `json:"imageUrl,omitempty"`
-	Category  string   `json:"category"`
-	Username  string   `json:"username"`
-	Date      string   `json:"date"`
-	LikeCount int      `json:"likeCount"`
-	Comments  []string `json:"comments"`
+	Title        string   `json:"title"`
+	Body         string   `json:"body"`
+	ImageUrl     *string  `json:"imageUrl,omitempty"`
+	Category     string   `json:"category"`
+	Username     string   `json:"username"`
+	Date         string   `json:"date"`
+	LikeCount    int      `json:"likeCount"`
+	CommentCount int      `json:"commentCount"`
+	Comments     []string `json:"comments"`
 }
