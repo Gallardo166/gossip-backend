@@ -41,5 +41,8 @@ func routers() *chi.Mux {
 
 	//GET comments
 	router.Get("/comments", controllers.GetAllComments)
+
+	//POST users
+	router.Post("/user", controllers.PostUser)
 	return router
 }

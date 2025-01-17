@@ -95,3 +95,10 @@ var ParentQuery = `
 	FROM comments AS c
 	WHERE parent_id = %s
 `
+
+var PostUserQuery = `
+	INSERT INTO
+		users (username, password)
+	VALUES
+		(:username, :password)
+`
