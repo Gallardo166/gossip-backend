@@ -8,6 +8,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var jwtKey = []byte(os.Getenv("JWTKEY"))
+
 func CreateToken(userId int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
@@ -15,7 +17,7 @@ func CreateToken(userId int) (string, error) {
 			"exp": time.Now().Add(time.Hour * 48).Unix(),
 		})
 
-	tokenString, err := token.SignedString([]byte(os.Getenv("JWTKEY")))
+	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
 		return "", err
 	}
@@ -25,9 +27,8 @@ func CreateToken(userId int) (string, error) {
 
 func VerifyToken(tokenString string) (int, error) {
 	var claims jwt.MapClaims
-	fmt.Println(tokenString)
 	token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWTKEY")), nil
+		return jwtKey, nil
 	})
 	if err != nil {
 		return 0, err

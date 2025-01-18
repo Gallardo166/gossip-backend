@@ -71,6 +71,13 @@ var GetPostQuery = `
 	WHERE  p.id = '%s' 
 `
 
+var PostPostQuery = `
+	INSERT INTO
+		posts (id, title, body, image_url, category_id, user_id, date)
+	VALUES
+		(DEFAULT, :title, :body, :imageUrl, :categoryId, :userId, :date)
+`
+
 var GetAllCategoriesQuery = `
 	SELECT * FROM categories
 `

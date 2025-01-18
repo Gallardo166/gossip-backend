@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"fmt"
+	"gossip-backend/config"
 	helper "gossip-backend/helpers"
 	"gossip-backend/initializers"
 	"gossip-backend/models"
@@ -87,4 +88,43 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	helper.WriteJson(w, post)
+}
+
+func PostPost(w http.ResponseWriter, r *http.Request) {
+	tokenString := r.Header.Get("Authorization")
+
+	id, err := config.CheckAuthorized(tokenString)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusUnauthorized)
+	}
+
+	var post models.InsertPost
+
+	err = r.ParseMultipartForm(2000000)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
+	post.UserId = id
+
+	data := r.Form
+	post.Title = data["title"][0]
+	post.Body = data["body"][0]
+	post.CategoryId = data["category"][0]
+	post.Date = data["date"][0]
+
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
+
+	imageUrl, err := config.UploadFile(file, header.Filename)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
+	post.ImageUrl = &imageUrl
+
+	_, err = initializers.DB.NamedExec(PostPostQuery, post)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
 }

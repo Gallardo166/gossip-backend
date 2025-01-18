@@ -25,11 +25,10 @@ type Post struct {
 }
 
 type InsertPost struct {
-	Id         int     `json:"id"`
-	Title      string  `json:"title"`
-	Body       string  `json:"body"`
-	ImageUrl   *string `json:"imageUrl,omitempty"`
-	CategoryId int     `json:"categoryId"`
-	UserId     int     `json:"userId"`
-	Date       string  `json:"date"`
+	Title      string  `json:"title" db:"title"`
+	Body       string  `json:"body" db:"body"`
+	ImageUrl   *string `json:"imageUrl,omitempty" db:"imageUrl"`
+	CategoryId string  `json:"categoryId" db:"categoryId"`
+	UserId     int     `json:"userId" db:"userId"`
+	Date       string  `json:"date" db:"date"`
 }
