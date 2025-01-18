@@ -19,7 +19,7 @@ func GetAllComments(w http.ResponseWriter, r *http.Request) {
 	rows, err := initializers.DB.Queryx(finalQuery)
 
 	if err != nil {
-		helper.WriteError(w, err)
+		helper.WriteError(w, err, http.StatusInternalServerError)
 	}
 
 	var comments []*models.Comment
@@ -35,7 +35,7 @@ func GetAllComments(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			helper.WriteError(w, err)
+			helper.WriteError(w, err, http.StatusInternalServerError)
 		}
 
 		comments = append(comments, &comment)

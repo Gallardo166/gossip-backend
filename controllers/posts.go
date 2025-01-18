@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"fmt"
 	helper "gossip-backend/helpers"
 	"gossip-backend/initializers"
@@ -34,7 +35,7 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	rows, err := initializers.DB.Queryx(finalQuery)
 
 	if err != nil {
-		helper.WriteError(w, err)
+		helper.WriteError(w, err, http.StatusInternalServerError)
 	}
 
 	var posts []*models.PostPreview
@@ -53,18 +54,18 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			helper.WriteError(w, err)
+			helper.WriteError(w, err, http.StatusInternalServerError)
 		}
 
 		posts = append(posts, &post)
 	}
-
 	helper.WriteJson(w, posts)
 }
 
 func GetPost(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	row := initializers.DB.QueryRowx(fmt.Sprintf(GetPostQuery, id))
+	row := initializers.DB.QueryRow(fmt.Sprintf(GetPostQuery, id))
+
 	var post models.Post
 	err := row.Scan(
 		&post.Title,
@@ -79,8 +80,11 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		helper.WriteError(w, err)
+		if err == sql.ErrNoRows {
+			helper.WriteError(w, fmt.Errorf("no rows match query"), http.StatusBadRequest)
+		} else {
+			helper.WriteError(w, err, http.StatusInternalServerError)
+		}
 	}
-
 	helper.WriteJson(w, post)
 }

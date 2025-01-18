@@ -96,9 +96,21 @@ var ParentQuery = `
 	WHERE parent_id = %s
 `
 
+var GetUserById = `
+	SELECT id, username, password
+	FROM users
+	WHERE id = %s
+`
+
+var GetUserByUsername = `
+	SELECT id, username, password
+	FROM users
+	WHERE username = '%s'
+`
+
 var PostUserQuery = `
 	INSERT INTO
-		users (username, password)
+		users (id, username, password)
 	VALUES
-		(:username, :password)
+		(DEFAULT, :username, :password)
 `

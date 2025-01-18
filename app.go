@@ -3,14 +3,21 @@ package main
 import (
 	"gossip-backend/controllers"
 	"gossip-backend/initializers"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/joho/godotenv"
 )
 
 func init() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	envErr := godotenv.Load(".env")
+	if envErr != nil {
+		log.Fatalf("Error loading .env file: %s", envErr)
+	}
 	initializers.ConnectDB()
 }
 
@@ -42,7 +49,13 @@ func routers() *chi.Mux {
 	//GET comments
 	router.Get("/comments", controllers.GetAllComments)
 
+	//GET users
+	router.Get("/user", controllers.GetUser)
+
 	//POST users
 	router.Post("/user", controllers.PostUser)
+
+	//authentication
+	router.Post("/login", controllers.Login)
 	return router
 }

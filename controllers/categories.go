@@ -11,7 +11,7 @@ func GetAllCategories(w http.ResponseWriter, r *http.Request) {
 	rows, err := initializers.DB.Queryx(GetAllCategoriesQuery)
 
 	if err != nil {
-		helper.WriteError(w, err)
+		helper.WriteError(w, err, http.StatusInternalServerError)
 	}
 
 	var categories []*models.Category
@@ -23,7 +23,7 @@ func GetAllCategories(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			helper.WriteError(w, err)
+			helper.WriteError(w, err, http.StatusInternalServerError)
 		}
 
 		categories = append(categories, &category)

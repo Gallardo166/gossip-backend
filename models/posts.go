@@ -23,3 +23,13 @@ type Post struct {
 	CommentCount int      `json:"commentCount"`
 	Comments     []string `json:"comments"`
 }
+
+type InsertPost struct {
+	Id         int     `json:"id"`
+	Title      string  `json:"title"`
+	Body       string  `json:"body"`
+	ImageUrl   *string `json:"imageUrl,omitempty"`
+	CategoryId int     `json:"categoryId"`
+	UserId     int     `json:"userId"`
+	Date       string  `json:"date"`
+}
