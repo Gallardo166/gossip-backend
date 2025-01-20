@@ -116,19 +116,68 @@ func PostPost(w http.ResponseWriter, r *http.Request) {
 	post.Date = data["date"][0]
 
 	file, header, err := r.FormFile("file")
-	if err != nil {
+	if err != nil && err != http.ErrMissingFile {
 		helper.WriteError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	imageUrl, err := config.UploadFile(file, header.Filename)
-	if err != nil {
-		helper.WriteError(w, err, http.StatusInternalServerError)
-		return
+	if err != http.ErrMissingFile {
+		imageUrl, err := config.UploadFile(file, header.Filename)
+		if err != nil {
+			helper.WriteError(w, err, http.StatusInternalServerError)
+			return
+		}
+		post.ImageUrl = &imageUrl
 	}
-	post.ImageUrl = &imageUrl
 
 	_, err = initializers.DB.NamedExec(PostPostQuery, post)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+}
+
+func UpdatePost(w http.ResponseWriter, r *http.Request) {
+	tokenString := r.Header.Get("Authorization")
+
+	_, err := config.CheckAuthorized(tokenString)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	var post models.InsertPost
+
+	err = r.ParseMultipartForm(2000000)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	data := r.Form
+	post.Id = data["id"][0]
+	post.Title = data["title"][0]
+	post.Body = data["body"][0]
+	post.CategoryId = data["category"][0]
+	post.Date = data["date"][0]
+
+	file, header, err := r.FormFile("file")
+	if err != nil && err != http.ErrMissingFile {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	if err != http.ErrMissingFile {
+		imageUrl, err := config.UploadFile(file, header.Filename)
+		if err != nil {
+			helper.WriteError(w, err, http.StatusInternalServerError)
+			return
+		}
+		post.ImageUrl = &imageUrl
+	}
+
+	_, err = initializers.DB.NamedExec(UpdatePostQuery, post)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
 		return

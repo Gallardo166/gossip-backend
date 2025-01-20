@@ -11,6 +11,7 @@ type Comment struct {
 }
 
 type InsertComment struct {
+	Id       string `json:"id" db:"id"`
 	Body     string `db:"body"`
 	UserId   int    `db:"userId"`
 	PostId   int    `db:"postId"`

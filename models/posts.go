@@ -25,6 +25,7 @@ type Post struct {
 }
 
 type InsertPost struct {
+	Id         string  `json:"id" db:"id"`
 	Title      string  `json:"title" db:"title"`
 	Body       string  `json:"body" db:"body"`
 	ImageUrl   *string `json:"imageUrl,omitempty" db:"imageUrl"`

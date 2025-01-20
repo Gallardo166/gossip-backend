@@ -71,10 +71,36 @@ func PostComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	comment.UserId = id
-	fmt.Print(parentId)
 
 	_, err = initializers.DB.NamedExec(finalQuery, comment)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
+}
+
+func UpdateComment(w http.ResponseWriter, r *http.Request) {
+	tokenString := r.Header.Get("Authorization")
+
+	_, err := config.CheckAuthorized(tokenString)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	var comment models.InsertComment
+
+	err = json.NewDecoder(r.Body).Decode(&comment)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Print(comment.Body)
+	fmt.Print(comment.PostId)
+
+	_, err = initializers.DB.NamedExec(UpdateCommentQuery, comment)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
 	}
 }

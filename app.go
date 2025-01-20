@@ -44,6 +44,8 @@ func routers() *chi.Mux {
 	router.Get("/post/{id}", controllers.GetPost)
 	//POST posts
 	router.Post("/post", controllers.PostPost)
+	//PUT posts
+	router.Put("/post", controllers.UpdatePost)
 
 	//GET categories
 	router.Get("/categories", controllers.GetAllCategories)
@@ -52,6 +54,8 @@ func routers() *chi.Mux {
 	router.Get("/comments", controllers.GetAllComments)
 	//POST comments
 	router.Post("/comment", controllers.PostComment)
+	//PUT comments
+	router.Put("/comment", controllers.UpdateComment)
 
 	//GET users
 	router.Get("/user", controllers.GetUser)

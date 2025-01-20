@@ -78,6 +78,12 @@ var PostPostQuery = `
 		(DEFAULT, :title, :body, :imageUrl, :categoryId, :userId, :date)
 `
 
+var UpdatePostQuery = `
+	UPDATE posts 
+	SET title = :title, body = :body, image_url = :imageUrl, category_id = :categoryId, date = :date
+	WHERE id = :id
+`
+
 var GetAllCategoriesQuery = `
 	SELECT * FROM categories
 `
@@ -115,6 +121,12 @@ var PostCommentWithoutParentQuery = `
 		comments (id, body, user_id, post_id, date)
 	VALUES
 		(DEFAULT, :body, :userId, :postId, :date)
+`
+
+var UpdateCommentQuery = `
+ 	UPDATE comments 
+	SET body = :body, date = :date
+	WHERE id = :id
 `
 
 var GetUserById = `
