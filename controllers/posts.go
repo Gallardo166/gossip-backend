@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"gossip-backend/config"
 	helper "gossip-backend/helpers"
@@ -178,6 +179,30 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err = initializers.DB.NamedExec(UpdatePostQuery, post)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+}
+
+func DeletePost(w http.ResponseWriter, r *http.Request) {
+	tokenString := r.Header.Get("Authorization")
+
+	_, err := config.CheckAuthorized(tokenString)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	var post models.InsertPost
+
+	err = json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	_, err = initializers.DB.NamedExec(DeletePostQuery, post)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
 		return

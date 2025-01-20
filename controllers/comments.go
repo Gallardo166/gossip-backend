@@ -95,10 +95,31 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print(comment.Body)
-	fmt.Print(comment.PostId)
-
 	_, err = initializers.DB.NamedExec(UpdateCommentQuery, comment)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+}
+
+func DeleteComment(w http.ResponseWriter, r *http.Request) {
+	tokenString := r.Header.Get("Authorization")
+
+	_, err := config.CheckAuthorized(tokenString)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	var comment models.InsertComment
+
+	err = json.NewDecoder(r.Body).Decode(&comment)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	_, err = initializers.DB.NamedExec(DeleteCommentQuery, comment)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
 		return

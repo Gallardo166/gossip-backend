@@ -84,6 +84,11 @@ var UpdatePostQuery = `
 	WHERE id = :id
 `
 
+var DeletePostQuery = `
+	DELETE FROM posts
+	WHERE id = :id
+`
+
 var GetAllCategoriesQuery = `
 	SELECT * FROM categories
 `
@@ -127,6 +132,11 @@ var UpdateCommentQuery = `
  	UPDATE comments 
 	SET body = :body, date = :date
 	WHERE id = :id
+`
+
+var DeleteCommentQuery = `
+	DELETE FROM comments
+	WHERE parent_id = :id OR id = :id
 `
 
 var GetUserById = `

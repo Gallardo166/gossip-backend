@@ -46,6 +46,8 @@ func routers() *chi.Mux {
 	router.Post("/post", controllers.PostPost)
 	//PUT posts
 	router.Put("/post", controllers.UpdatePost)
+	//DELETE posts
+	router.Delete("/post", controllers.DeletePost)
 
 	//GET categories
 	router.Get("/categories", controllers.GetAllCategories)
@@ -56,6 +58,8 @@ func routers() *chi.Mux {
 	router.Post("/comment", controllers.PostComment)
 	//PUT comments
 	router.Put("/comment", controllers.UpdateComment)
+	//DELETE comments
+	router.Delete("/comment", controllers.DeleteComment)
 
 	//GET users
 	router.Get("/user", controllers.GetUser)
