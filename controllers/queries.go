@@ -57,11 +57,11 @@ var GetPostQuery = `
 																										WHERE cl.comment_id = com.id),
 																		'replyCount', (SELECT COUNT(*)
 																										FROM comments
-																										WHERE parent_id = com.id)
+																										WHERE comments.parent_id = com.id)
 									)
 								)
 					FROM   comments AS com
-					WHERE  post_id = p.id
+					WHERE  com.post_id = p.id
 					AND parent_id IS NULL) AS comments
 	FROM   posts AS p
 				JOIN users AS u
@@ -101,6 +101,20 @@ var ParentQuery = `
 					WHERE comments.parent_id = c.id) AS replyCount
 	FROM comments AS c
 	WHERE parent_id = %s
+`
+
+var PostCommentQuery = `
+	INSERT INTO
+		comments (id, body, user_id, post_id, date, parent_id)
+	VALUES
+		(DEFAULT, :body, :userId, :postId, :date, :parentId)
+`
+
+var PostCommentWithoutParentQuery = `
+	INSERT INTO
+		comments (id, body, user_id, post_id, date)
+	VALUES
+		(DEFAULT, :body, :userId, :postId, :date)
 `
 
 var GetUserById = `

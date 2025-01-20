@@ -56,6 +56,7 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			helper.WriteError(w, err, http.StatusInternalServerError)
+			return
 		}
 
 		posts = append(posts, &post)
@@ -96,6 +97,7 @@ func PostPost(w http.ResponseWriter, r *http.Request) {
 	id, err := config.CheckAuthorized(tokenString)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusUnauthorized)
+		return
 	}
 
 	var post models.InsertPost
@@ -103,6 +105,7 @@ func PostPost(w http.ResponseWriter, r *http.Request) {
 	err = r.ParseMultipartForm(2000000)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
 	}
 	post.UserId = id
 
@@ -115,16 +118,19 @@ func PostPost(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("file")
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
 	}
 
 	imageUrl, err := config.UploadFile(file, header.Filename)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
 	}
 	post.ImageUrl = &imageUrl
 
 	_, err = initializers.DB.NamedExec(PostPostQuery, post)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
 	}
 }

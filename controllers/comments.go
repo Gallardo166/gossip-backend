@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
+	"gossip-backend/config"
 	helper "gossip-backend/helpers"
 	"gossip-backend/initializers"
 	"gossip-backend/models"
@@ -42,4 +44,37 @@ func GetAllComments(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.WriteJson(w, comments)
+}
+
+func PostComment(w http.ResponseWriter, r *http.Request) {
+	tokenString := r.Header.Get("Authorization")
+
+	id, err := config.CheckAuthorized(tokenString)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	parentId := r.URL.Query().Get("parentId")
+	var finalQuery string
+	if parentId == "" {
+		finalQuery = PostCommentWithoutParentQuery
+	} else {
+		finalQuery = PostCommentQuery
+	}
+
+	var comment models.InsertComment
+
+	err = json.NewDecoder(r.Body).Decode(&comment)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+	comment.UserId = id
+	fmt.Print(parentId)
+
+	_, err = initializers.DB.NamedExec(finalQuery, comment)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
 }

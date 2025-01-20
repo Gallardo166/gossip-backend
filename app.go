@@ -50,6 +50,8 @@ func routers() *chi.Mux {
 
 	//GET comments
 	router.Get("/comments", controllers.GetAllComments)
+	//POST comments
+	router.Post("/comment", controllers.PostComment)
 
 	//GET users
 	router.Get("/user", controllers.GetUser)
