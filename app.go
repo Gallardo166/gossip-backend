@@ -66,6 +66,13 @@ func routers() *chi.Mux {
 	//POST users
 	router.Post("/user", controllers.PostUser)
 
+	//GET likes
+	router.Get("/like", controllers.GetLike)
+	//POST likes
+	router.Post("/like", controllers.PostLike)
+	//DELETE likes
+	router.Delete("/like", controllers.DeleteLike)
+
 	//authentication
 	router.Post("/login", controllers.Login)
 	return router

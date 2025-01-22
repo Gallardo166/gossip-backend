@@ -14,7 +14,7 @@ var GetAllPostsQuery = `
 				(SELECT Count(*)
 					FROM   comments
 					WHERE  post_id = p.id) AS comment_count
-	FROM   posts AS p
+	FROM  posts AS p
 				JOIN users AS u
 					ON p.user_id = u.id
 				JOIN categories AS c
@@ -156,4 +156,22 @@ var PostUserQuery = `
 		users (id, username, password)
 	VALUES
 		(DEFAULT, :username, :password)
+`
+
+var GetLikeQuery = `
+	SELECT *
+	FROM post_likes
+	WHERE user_id = %d AND post_id = %s
+`
+
+var PostLikeQuery = `
+	INSERT INTO
+		post_likes (user_id, post_id)
+	VALUES
+		(%d, %s)
+`
+
+var DeleteLikeQuery = `
+	DELETE FROM post_likes
+	WHERE user_id = %d AND post_id = %s
 `
