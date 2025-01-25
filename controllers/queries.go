@@ -81,6 +81,16 @@ var UpdatePostQuery = `
 	WHERE id = :id
 `
 
+var DeleteLikeByPost = `
+	DELETE FROM post_likes
+	WHERE post_id = :id
+`
+
+var DeleteCommentByPost = `
+	DELETE FROM comments
+	WHERE post_id = :id
+`
+
 var DeletePostQuery = `
 	DELETE FROM posts
 	WHERE id = :id

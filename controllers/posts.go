@@ -212,6 +212,17 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_, err = initializers.DB.NamedExec(DeleteLikeByPost, post)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+	_, err = initializers.DB.NamedExec(DeleteCommentByPost, post)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+		return
+	}
+
 	_, err = initializers.DB.NamedExec(DeletePostQuery, post)
 	if err != nil {
 		helper.WriteError(w, err, http.StatusInternalServerError)
