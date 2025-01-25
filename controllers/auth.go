@@ -39,12 +39,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		&userData.Password,
 	)
 
+	//check if username already exists
 	if err != nil {
 		if err == sql.ErrNoRows {
 			helper.WriteJsonError(w, "Wrong username or password", http.StatusBadRequest)
 		} else {
 			helper.WriteError(w, err, http.StatusInternalServerError)
 		}
+		//check if password is correct
 	} else if !config.Compare(user.Password, userData.Password) {
 		helper.WriteJsonError(w, "Wrong username or password", http.StatusBadRequest)
 	} else {

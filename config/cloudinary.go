@@ -10,12 +10,14 @@ import (
 )
 
 func UploadFile(file multipart.File, filePath string) (string, error) {
+	//connect to CLoudinary
 	url := os.Getenv("CLOUDINARY_URL")
 	cld, err := cloudinary.NewFromURL(url)
 	if err != nil {
 		return "", err
 	}
 
+	//upload image
 	ctx := context.Background()
 	resp, err := cld.Upload.Upload(ctx, file, uploader.UploadParams{PublicID: filePath})
 	if err != nil {

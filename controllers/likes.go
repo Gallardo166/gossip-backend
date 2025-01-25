@@ -35,6 +35,7 @@ func GetLike(w http.ResponseWriter, r *http.Request) {
 		IsLiked bool `json:"isLiked"`
 	}
 
+	//check if user has liked the post
 	if err != nil {
 		if err == sql.ErrNoRows {
 			data := responseData{false}
