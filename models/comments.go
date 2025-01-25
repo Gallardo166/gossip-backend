@@ -10,7 +10,7 @@ type Comment struct {
 }
 
 type InsertComment struct {
-	Id       int    `json:"id" db:"id" validate:"required"`
+	Id       int    `json:"id" db:"id"`
 	Body     string `db:"body" validate:"required,max=800"`
 	UserId   int    `db:"userId" validate:"required"`
 	PostId   int    `db:"postId" validate:"required"`
