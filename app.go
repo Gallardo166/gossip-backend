@@ -10,15 +10,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/joho/godotenv"
 )
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	envErr := godotenv.Load(".env")
-	if envErr != nil {
-		log.Fatalf("Error loading .env file: %s", envErr)
-	}
 	initializers.ConnectDB()
 }
 
