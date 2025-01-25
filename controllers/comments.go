@@ -8,6 +8,8 @@ import (
 	"gossip-backend/initializers"
 	"gossip-backend/models"
 	"net/http"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func GetAllComments(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +34,6 @@ func GetAllComments(w http.ResponseWriter, r *http.Request) {
 			&comment.Username,
 			&comment.Body,
 			&comment.Date,
-			&comment.LikeCount,
 			&comment.ReplyCount,
 		)
 
@@ -71,6 +72,13 @@ func PostComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	comment.UserId = id
+
+	validate := validator.New()
+
+	err = validate.Struct(comment)
+	if err != nil {
+		helper.WriteError(w, err, http.StatusBadRequest)
+	}
 
 	_, err = initializers.DB.NamedExec(finalQuery, comment)
 	if err != nil {

@@ -52,14 +52,11 @@ var GetPostQuery = `
 																									WHERE u.id = com.user_id),
 																		'body', com.body,
 																		'date', com.date,
-																		'likeCount', (SELECT COUNT(*)
-																										FROM comment_likes AS cl
-																										WHERE cl.comment_id = com.id),
 																		'replyCount', (SELECT COUNT(*)
 																										FROM comments
 																										WHERE comments.parent_id = com.id)
 									)
-								)
+								ORDER BY com.date DESC)
 					FROM   comments AS com
 					WHERE  com.post_id = p.id
 					AND parent_id IS NULL) AS comments
@@ -104,9 +101,6 @@ var ParentQuery = `
 					WHERE u.id = user_id) AS username,
 				 body,
 				 date,
-				 (SELECT COUNT(*)
-				  FROM comment_likes AS cl
-					WHERE cl.comment_id = id) AS likeCount,
 				 (SELECT COUNT(*)
 				  FROM comments
 					WHERE comments.parent_id = c.id) AS replyCount

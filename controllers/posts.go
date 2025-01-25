@@ -9,6 +9,7 @@ import (
 	"gossip-backend/initializers"
 	"gossip-backend/models"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/lib/pq"
@@ -113,7 +114,10 @@ func PostPost(w http.ResponseWriter, r *http.Request) {
 	data := r.Form
 	post.Title = data["title"][0]
 	post.Body = data["body"][0]
-	post.CategoryId = data["category"][0]
+	post.CategoryId, err = strconv.Atoi(data["category"][0])
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
 	post.Date = data["date"][0]
 
 	file, header, err := r.FormFile("file")
@@ -157,10 +161,16 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := r.Form
-	post.Id = data["id"][0]
+	post.Id, err = strconv.Atoi(data["id"][0])
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
 	post.Title = data["title"][0]
 	post.Body = data["body"][0]
-	post.CategoryId = data["category"][0]
+	post.CategoryId, err = strconv.Atoi(data["category"][0])
+	if err != nil {
+		helper.WriteError(w, err, http.StatusInternalServerError)
+	}
 	post.Date = data["date"][0]
 
 	file, header, err := r.FormFile("file")

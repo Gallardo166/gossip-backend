@@ -71,7 +71,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if errNoUser == nil {
-		helper.WriteError(w, fmt.Errorf("username taken"), http.StatusBadRequest)
+		helper.WriteJsonError(w, "This username is taken", http.StatusBadRequest)
 		return
 	}
 

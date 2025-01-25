@@ -41,12 +41,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helper.WriteError(w, fmt.Errorf("wrong username or password"), http.StatusBadRequest)
+			helper.WriteJsonError(w, "Wrong username or password", http.StatusBadRequest)
 		} else {
 			helper.WriteError(w, err, http.StatusInternalServerError)
 		}
 	} else if !config.Compare(user.Password, userData.Password) {
-		helper.WriteError(w, fmt.Errorf("wrong username or password"), http.StatusBadRequest)
+		helper.WriteJsonError(w, "Wrong username or password", http.StatusBadRequest)
 	} else {
 		tokenString, err := config.CreateToken(userData.Id)
 		if err != nil {
