@@ -36,7 +36,7 @@ func main() {
 	if port == "" {
 		port = "3000"
 	}
-	http.ListenAndServe(":"+port, router)
+	http.ListenAndServe("0.0.0.0:"+port, router)
 }
 
 func routers() *chi.Mux {
