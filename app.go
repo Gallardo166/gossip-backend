@@ -5,6 +5,7 @@ import (
 	"gossip-backend/initializers"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -35,7 +36,8 @@ func main() {
 		MaxAge:           300,
 	}))
 	routers()
-	http.ListenAndServe(":3000", router)
+	port := os.Getenv("PORT")
+	http.ListenAndServe(":"+port, router)
 }
 
 func routers() *chi.Mux {
