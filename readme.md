@@ -4,8 +4,12 @@ Name: Cheneil Gallardo Lee
 
 Link to deployed app: <https://gossip-frontend-nine.vercel.app/>
 
+Frontend Codebase: <https://github.com/Gallardo166/gossip-frontend>
+
 Image credits:
 Photo by <a href="https://unsplash.com/@von_co?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Ivana Cajina</a> on <a href="https://unsplash.com/photos/milky-way-asuyh-_ZX54?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>, Photo by <a href="https://unsplash.com/@damiano_baschiera?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Damiano Baschiera</a> on <a href="https://unsplash.com/photos/bed-of-orange-flowers-d4feocYfzAM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+
+  --------------------------------------------------------
 
 Or run locally:
 
@@ -17,7 +21,7 @@ Or run locally:
 - Click on 'PostgreSQL 17' and enter the password from the previous step
 - Right click 'Databases' and create a new database, entering the database name
 - Open 'Schemas' and 'public', right click on 'Tables', and click 'Query Tool"
-- Run the following scripts to create the tables:
+- Run the following script to create the tables:
   
      ```sql
      CREATE TABLE IF NOT EXISTS public.categories
@@ -31,11 +35,7 @@ Or run locally:
       
      ALTER TABLE IF EXISTS public.categories
        OWNER to postgres;
-     ```
 
-    --------------------------------------------------------
-
-     ```sql
      CREATE TABLE IF NOT EXISTS public.users
      (
         id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
@@ -48,11 +48,7 @@ Or run locally:
       
      ALTER TABLE IF EXISTS public.users
      OWNER to postgres;
-     ```
-
-    --------------------------------------------------------
-
-     ```sql
+     
      CREATE TABLE IF NOT EXISTS public.posts
      (
         id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
@@ -79,11 +75,7 @@ Or run locally:
         
      ALTER TABLE IF EXISTS public.posts
        OWNER to postgres;
-    ```
-
-    --------------------------------------------------------
-
-    ```sql
+    
     CREATE TABLE IF NOT EXISTS public.post_likes
     (
         post_id integer NOT NULL,
@@ -102,11 +94,7 @@ Or run locally:
         
     ALTER TABLE IF EXISTS public.post_likes
       OWNER to postgres;
-    ```
-
-    --------------------------------------------------------
-
-     ```sql
+    
      CREATE TABLE IF NOT EXISTS public.comments
      (
         id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
